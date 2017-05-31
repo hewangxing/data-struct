@@ -5,13 +5,19 @@
 struct Data
 {
 	int data;
+	void (*pFunc)(struct Data *pData);
 	struct list_head list;
 };
+
+void func(struct Data *pData)
+{
+	printf("in func pData->data = %d.\n", pData->data);
+}
 
 int main(void)
 {
 	struct Data *pData; //定义一个双向循环链表的头指针
-	struct Data pHead; //定义一个双向循环链表的头结点
+	struct Data pHead;  //定义一个双向循环链表的头结点
 	struct list_head *pos, *next;
 	int i = 0;
 	
@@ -31,7 +37,9 @@ int main(void)
 	list_for_each(pos, &(pHead.list))
 	{
 		pData = list_entry(pos, struct Data, list);
-		printf("pData->data = %d.\n", pData->data);
+		pData->pFunc = func;
+		pData->pFunc(pData);
+		//printf("pData->data = %d.\n", pData->data);
 	}
 	
 	//删除节点
